@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    # The one combination the dev setup pins today. Which PHP, Laravel, Filament
+    # and Pulse versions to cover is decided in #11.
+    name: PHP 8.4, Laravel 13
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: dom, fileinfo, intl, mbstring, pdo_sqlite, sqlite3, zip
+          coverage: none
+
+      - id: install
+        uses: ramsey/composer-install@v4
+        with:
+          dependency-versions: highest
+
+      # Run every check even when an earlier one fails, so one push reports them all.
+      - name: Formatting (Pint)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: vendor/bin/pint --test
+
+      - name: Static analysis (Larastan)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: composer analyse
+
+      - name: Tests (Pest)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: composer test
