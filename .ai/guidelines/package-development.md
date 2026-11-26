@@ -7,4 +7,5 @@ This repository is a Laravel package (`kfriars/filament-pulse-widgets`), not a L
 - Do not use `php artisan make:*`. Generators either write into `workbench/` or, for tests, fail. Create files in `src/` and `tests/` by hand, following sibling files.
 - There is no frontend build: no Vite, no `npm run build`.
 - Run `composer test` (Pest), `composer analyse` (Larastan) and `composer format` (Pint) before finishing a change. Every PHP file declares `strict_types=1`.
+- Also run `composer mutate` before finishing any change to `src/`. It is Pest mutation testing over `src/` and must stay at a 100% score. It needs Xdebug or PCOV, and it is a local check only: CI does not run it. A surviving mutation means a missing or weak test, so fix the test. Only a mutation that cannot change behaviour (an equivalent mutant) may be ignored, with a trailing `// @pest-mutate-ignore <Mutator>` comment and the reason beside it.
 - Use the domain terms in `GLOSSARY.md`: Pulse card, widget, Pulse widget, Pulse page, Pulse dashboard.

@@ -62,6 +62,10 @@
             "@php vendor/bin/testbench serve --ansi"
         ],
         "test": "@php vendor/bin/pest",
+        "mutate": [
+            "@putenv XDEBUG_MODE=coverage",
+            "@php vendor/bin/pest --mutate --everything --path=src --min=100"
+        ],
         "analyse": "@php vendor/bin/phpstan analyse --memory-limit=1G",
         "format": "@php vendor/bin/pint"
     },
