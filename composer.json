@@ -1,0 +1,87 @@
+{
+    "name": "kfriars/filament-pulse-widgets",
+    "description": "Laravel Pulse cards as Filament v5 widgets, alongside your panel's own widgets.",
+    "keywords": [
+        "laravel",
+        "filament",
+        "pulse",
+        "widgets",
+        "monitoring"
+    ],
+    "homepage": "https://github.com/kfriars/filament-pulse-widgets",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kurt Friars",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "filament/filament": "^5.12",
+        "illuminate/contracts": "^12.0|^13.0",
+        "laravel/pulse": "^1.11",
+        "livewire/livewire": "^4.0",
+        "spatie/laravel-package-tools": "^1.92"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.15",
+        "laravel/boost": "^2.10",
+        "laravel/pint": "^1.32",
+        "orchestra/testbench": "^11.3",
+        "pestphp/pest": "^5.0",
+        "pestphp/pest-plugin-laravel": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kfriars\\FilamentPulseWidgets\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kfriars\\FilamentPulseWidgets\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "post-update-cmd": [
+            "@php artisan boost:update --ansi"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "test": "@php vendor/bin/pest",
+        "mutate": [
+            "@putenv XDEBUG_MODE=coverage",
+            "@php vendor/bin/pest --mutate --everything --path=src --min=100"
+        ],
+        "analyse": "@php vendor/bin/phpstan analyse --memory-limit=1G",
+        "format": "@php vendor/bin/pint"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kfriars\\FilamentPulseWidgets\\FilamentPulseWidgetsServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

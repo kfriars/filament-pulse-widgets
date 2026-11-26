@@ -1,1 +1,4 @@
 .claude/skills
+/vendor
+/composer.lock
+/.phpunit.cache

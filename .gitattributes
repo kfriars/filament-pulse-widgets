@@ -1,0 +1,22 @@
+# Keep everything except the package itself out of the archive Composer installs.
+# tests/Feature/ReleaseArchiveTest.php fails if anything else would ship.
+
+/.ai                export-ignore
+/.claude            export-ignore
+/.github            export-ignore
+/docs               export-ignore
+/tests              export-ignore
+/workbench          export-ignore
+
+/.gitattributes     export-ignore
+/.gitignore         export-ignore
+/.mcp.json          export-ignore
+/artisan            export-ignore
+/boost.json         export-ignore
+/CHANGELOG.md       export-ignore
+/CLAUDE.md          export-ignore
+/GLOSSARY.md        export-ignore
+/phpstan.neon.dist  export-ignore
+/phpunit.xml.dist   export-ignore
+/pint.json          export-ignore
+/testbench.yaml     export-ignore

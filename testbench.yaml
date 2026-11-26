@@ -1,0 +1,35 @@
+laravel: '@testbench'
+
+env:
+  - APP_KEY="base64:7zdQEFzgaRH3l7Qd3r4hPGgsoWN5RcjfIZN5azR6b9c="
+  - DB_CONNECTION=sqlite
+
+providers:
+  - Kfriars\FilamentPulseWidgets\FilamentPulseWidgetsServiceProvider
+  - Workbench\App\Providers\BoostServiceProvider
+  - Workbench\App\Providers\WorkbenchServiceProvider
+  - Workbench\App\Providers\Filament\AdminPanelProvider
+
+seeders:
+  - Workbench\Database\Seeders\DatabaseSeeder
+
+workbench:
+  start: '/admin'
+  user: admin@example.com
+  install: true
+  health: false
+  discovers:
+    web: false
+    api: false
+    commands: false
+    components: false
+    factories: true
+    views: false
+  build:
+    - asset-publish
+    - filament-assets
+    - create-sqlite-db
+    - db-wipe
+    - migrate-fresh
+  assets:
+    - laravel-assets
