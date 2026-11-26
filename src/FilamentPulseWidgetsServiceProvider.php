@@ -11,6 +11,8 @@ class FilamentPulseWidgetsServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
-        $package->name('filament-pulse-widgets');
+        $package
+            ->name('filament-pulse-widgets')
+            ->hasViews();
     }
 }
