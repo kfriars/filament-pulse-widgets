@@ -1,0 +1,17 @@
+/*
+ * PROTOTYPE (throwaway): what "look native to the panel" adds on top of the panel's
+ * greys and font. Used by variants "theme" and "native", left out of "pulse".
+ *
+ * Filament's sections are `ring-1 ring-gray-950/5 dark:ring-white/10`. A Pulse card is
+ * `ring-1 ring-gray-900/5` with no dark ring, so it loses its edge in dark mode.
+ * In the utilities layer, so it beats Pulse's own `ring-gray-900/5` (on specificity).
+ */
+@layer utilities {
+    .fi-pulse-widget section.ring-1 {
+        --tw-ring-color: color-mix(in oklab, var(--gray-950) 5%, transparent);
+    }
+
+    .dark .fi-pulse-widget section.ring-1 {
+        --tw-ring-color: color-mix(in oklab, var(--color-white, #fff) 10%, transparent);
+    }
+}

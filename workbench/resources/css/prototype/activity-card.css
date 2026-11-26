@@ -1,0 +1,19 @@
+/*
+ * PROTOTYPE (throwaway): a custom Pulse card's own stylesheet, returned from
+ * ActivityCard::css(). Written exactly the way Pulse's docs say to for Tailwind 4
+ * (laravel.com/docs/12.x/pulse#custom-card-styling-tailwind), so it tests whether
+ * that recipe is safe on a Filament page.
+ */
+@import "tailwindcss/theme.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+@source "./../../views/prototype-styling/activity-card.blade.php";
+
+#workbench-activity {
+    @import "tailwindcss/utilities.css" source(none);
+}
+
+/* Visible proof in the card that this file reached the page. */
+#workbench-activity .activity-css-missing {
+    display: none;
+}

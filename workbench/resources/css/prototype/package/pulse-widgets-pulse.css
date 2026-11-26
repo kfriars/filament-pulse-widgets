@@ -1,0 +1,27 @@
+/*
+ * PROTOTYPE (throwaway), variant "pulse": the same package-compiled stylesheet as
+ * "native", but keeping Pulse's own look: Tailwind's default (cool) greys instead of
+ * the panel's, and Pulse's Figtree font (loaded from fonts.bunny.net, as Pulse's
+ * dashboard does). No dark-mode ring: that's how a Pulse card looks on /pulse.
+ */
+@import 'tailwindcss/theme.css' theme(reference inline);
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../../../../../vendor/laravel/pulse/resources/views/**/*';
+
+@import './compat.css';
+
+@layer components {
+    .fi-pulse-widget {
+        font-family:
+            Figtree, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+            'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    }
+}
+
+@layer utilities {
+    .fi-pulse-widget {
+        @import 'tailwindcss/utilities.css' source(none);
+    }
+}

@@ -1,0 +1,13 @@
+/*
+ * PROTOTYPE (throwaway), variant "theme": an app's custom Filament theme
+ * (`php artisan make:filament-theme`), plus the lines the package's README would
+ * tell users to add. Filament's own theme.css is these first two lines; they are
+ * inlined here only because the workbench has no node_modules next to vendor/.
+ */
+@import 'tailwindcss' source(none);
+@import '../../../../vendor/filament/filament/resources/css/index.css';
+
+/* ---- added for Filament Pulse Widgets ---- */
+@source '../../../../vendor/laravel/pulse/resources/views/**/*';
+@import './package/compat.css';
+@import './package/native.css';

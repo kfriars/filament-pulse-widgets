@@ -1,0 +1,11 @@
+{
+    "private": true,
+    "description": "PROTOTYPE (throwaway): builds the stylesheets for the Pulse widget styling prototype.",
+    "scripts": {
+        "build:prototype-css": "sh resources/css/prototype/build.sh"
+    },
+    "devDependencies": {
+        "@tailwindcss/cli": "4.3.5",
+        "tailwindcss": "4.3.5"
+    }
+}

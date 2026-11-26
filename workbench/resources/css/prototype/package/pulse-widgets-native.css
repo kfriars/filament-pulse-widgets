@@ -1,0 +1,38 @@
+/*
+ * PROTOTYPE (throwaway), variant "native": the stylesheet the package would compile
+ * itself and register as a Filament asset, so it works on Filament's default theme.
+ *
+ * - No preflight: Filament's theme already has Tailwind 4's.
+ * - No theme variables: `theme(reference inline)` writes values straight into the
+ *   utilities, so nothing here redefines a `--color-*` or `--spacing` on :root.
+ * - Greys are Filament's own `--gray-*` palette, so they follow `->colors(['gray' => …])`.
+ * - Every utility is nested under `.fi-pulse-widget`, so it can't leak into the panel.
+ */
+@import 'tailwindcss/theme.css' theme(reference inline);
+
+@theme inline reference {
+    --color-gray-50: var(--gray-50);
+    --color-gray-100: var(--gray-100);
+    --color-gray-200: var(--gray-200);
+    --color-gray-300: var(--gray-300);
+    --color-gray-400: var(--gray-400);
+    --color-gray-500: var(--gray-500);
+    --color-gray-600: var(--gray-600);
+    --color-gray-700: var(--gray-700);
+    --color-gray-800: var(--gray-800);
+    --color-gray-900: var(--gray-900);
+    --color-gray-950: var(--gray-950);
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../../../../../vendor/laravel/pulse/resources/views/**/*';
+
+@import './compat.css';
+@import './native.css';
+
+@layer utilities {
+    .fi-pulse-widget {
+        @import 'tailwindcss/utilities.css' source(none);
+    }
+}
