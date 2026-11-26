@@ -8,7 +8,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -20,6 +19,9 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Workbench\App\Prototype\PulseWidgetShape\Be;
+use Workbench\App\Prototype\PulseWidgetShape\Contain;
+use Workbench\App\Prototype\PulseWidgetShape\PrototypeDashboard;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -34,11 +36,23 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->pages([
-                Dashboard::class,
+                // PROTOTYPE: ?variant=contain|be on the dashboard.
+                PrototypeDashboard::class,
             ])
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+            ])
+            // PROTOTYPE: registered as Livewire components only; PrototypeDashboard picks which render.
+            ->livewireComponents([
+                Contain\ServersWidget::class,
+                Contain\UsageWidget::class,
+                Contain\SlowQueriesWidget::class,
+                Contain\ActivityWidget::class,
+                Be\ServersWidget::class,
+                Be\UsageWidget::class,
+                Be\SlowQueriesWidget::class,
+                Be\ActivityWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
