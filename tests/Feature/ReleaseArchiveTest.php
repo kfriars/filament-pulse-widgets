@@ -17,6 +17,7 @@ it('ships only the package itself in the release archive', function () {
     $unexpected = collect(explode("\n", trim($archive)))
         ->reject(fn (string $path): bool => str_ends_with($path, '/'))
         ->reject(fn (string $path): bool => str_starts_with($path, 'src/'))
+        ->reject(fn (string $path): bool => str_starts_with($path, 'resources/'))
         ->reject(fn (string $path): bool => in_array($path, ['composer.json', 'LICENSE.md', 'README.md'], true))
         ->values()
         ->all();

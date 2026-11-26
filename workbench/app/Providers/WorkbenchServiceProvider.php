@@ -19,6 +19,8 @@ class WorkbenchServiceProvider extends ServiceProvider
         // Pulse only publishes its migration, so load it straight from the package.
         $this->loadMigrationsFrom(package_path('vendor/laravel/pulse/database/migrations'));
 
+        $this->loadViewsFrom(package_path('workbench/resources/views'), 'workbench');
+
         Gate::define('viewPulse', fn (User $user): bool => true);
 
         // Keep the workbench's servers live on the Servers card; Pulse ingests at the end of the request.

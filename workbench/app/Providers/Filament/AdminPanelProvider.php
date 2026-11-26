@@ -21,6 +21,18 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Kfriars\FilamentPulseWidgets\FilamentPulseWidgetsPlugin;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseCacheWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseExceptionsWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseQueuesWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseServersWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseSlowJobsWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseSlowOutgoingRequestsWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseSlowQueriesWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseSlowRequestsWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseUsageWidget;
+use Kfriars\FilamentPulseWidgets\Widgets\PulseWidget;
+use Workbench\App\Livewire\Pulse\Activity;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -37,9 +49,21 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
             ])
+            ->plugin(FilamentPulseWidgetsPlugin::make())
+            // Every ready-made Pulse widget, and a custom Pulse card, next to Filament's own widgets.
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                PulseServersWidget::class,
+                PulseUsageWidget::class,
+                PulseQueuesWidget::class,
+                PulseCacheWidget::class,
+                PulseExceptionsWidget::class,
+                PulseSlowQueriesWidget::class,
+                PulseSlowRequestsWidget::class,
+                PulseSlowJobsWidget::class,
+                PulseSlowOutgoingRequestsWidget::class,
+                PulseWidget::make()->card(Activity::class),
             ])
             ->middleware([
                 EncryptCookies::class,
