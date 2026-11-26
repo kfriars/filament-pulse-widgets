@@ -20,10 +20,6 @@ _Avoid_: Card, Pulse card widget
 One use of a Pulse widget on a page, with its own options. A page can hold several placements of the same Pulse widget.
 _Avoid_: Instance
 
-**Pulse page**:
-A Filament page, inside the panel, that lays out Pulse widgets the way Pulse's own dashboard lays out Pulse cards.
-_Avoid_: Pulse dashboard
-
 **Pulse dashboard**:
 Pulse's own standalone page (served at `/pulse` by default), outside any Filament panel.
 _Avoid_: Pulse page

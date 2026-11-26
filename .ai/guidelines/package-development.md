@@ -12,4 +12,4 @@ This repository is a Laravel package (`kfriars/filament-pulse-widgets`), not a L
   - Add every new development-only file or directory to `.gitattributes` with `export-ignore`, so it stays out of the release archive. `tests/Feature/ReleaseArchiveTest.php` fails otherwise.
   - Pin every GitHub Action to a full commit SHA, with the version as a trailing comment: `uses: owner/action@<40-char sha> # v1.2.3`. Dependabot keeps them current.
   - Give every Dependabot update entry a `cooldown` of at least 3 days.
-- Use the domain terms in `GLOSSARY.md`: Pulse card, widget, Pulse widget, Pulse page, Pulse dashboard.
+- Use the domain terms in `GLOSSARY.md`: Pulse card, widget, Pulse widget, Placement, Period, Pulse dashboard.
