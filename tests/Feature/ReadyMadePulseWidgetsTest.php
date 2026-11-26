@@ -16,11 +16,18 @@ use Kfriars\FilamentPulseWidgets\Widgets\PulseWidget;
 use Kfriars\FilamentPulseWidgets\Widgets\PulseWidgetConfiguration;
 use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Livewire\Livewire;
+use Workbench\App\Models\User;
 use Workbench\Database\Seeders\DatabaseSeeder;
 
+use function Pest\Laravel\actingAs;
 use function Pest\Laravel\seed;
 
-beforeEach(fn () => usePanel());
+// The workbench lets every signed-in user view Pulse.
+beforeEach(function () {
+    usePanel();
+
+    actingAs(User::factory()->createOne());
+});
 
 // Servers and Slow Queries need the full width of Filament's 2-column dashboard.
 it('contains a first-party Pulse card, as wide as that Pulse card needs', function (string $pulseWidgetClass, string $pulseCard, string $columnSpan) {
