@@ -221,6 +221,10 @@
     margin-left: .5rem;
   }
 
+  .fi-pulse-widget .ml-auto {
+    margin-left: auto;
+  }
+
   .fi-pulse-widget .block {
     display: block;
   }
@@ -373,7 +377,7 @@
     flex: 1;
   }
 
-  .fi-pulse-widget .flex-shrink-0 {
+  .fi-pulse-widget .flex-shrink-0, .fi-pulse-widget .shrink-0 {
     flex-shrink: 0;
   }
 

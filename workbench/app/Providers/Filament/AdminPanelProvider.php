@@ -8,7 +8,6 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -32,6 +31,7 @@ use Kfriars\FilamentPulseWidgets\Widgets\PulseSlowQueriesWidget;
 use Kfriars\FilamentPulseWidgets\Widgets\PulseSlowRequestsWidget;
 use Kfriars\FilamentPulseWidgets\Widgets\PulseUsageWidget;
 use Kfriars\FilamentPulseWidgets\Widgets\PulseWidget;
+use Workbench\App\Filament\Pages\Dashboard;
 use Workbench\App\Livewire\Pulse\Activity;
 
 class AdminPanelProvider extends PanelProvider

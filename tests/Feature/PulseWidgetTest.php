@@ -57,6 +57,11 @@ it('remounts its Pulse card at the new period when the period changes', function
         ->and($after['properties'])->toMatchArray(['period' => '7_days']);
 });
 
+// The period selector sets the period from the browser, which could send anything.
+it('takes only one of the four periods from the browser', function () {
+    mountPlacement(PulseUsageWidget::make())->set('period', 'fortnight');
+})->throws(ValueError::class, '"fortnight" is not a valid backing value for enum Kfriars\FilamentPulseWidgets\PulsePeriod');
+
 it('nests a custom Pulse card it is given', function () {
     $pulseWidget = mountPlacement(PulseWidget::make()->card(Activity::class));
 
@@ -102,7 +107,7 @@ it('spans the columns it is placed with', function () {
         ->toContain('--col-span-xl: span 1 / span 1');
 });
 
-// The period selector itself comes later; the setting is already part of a placement.
+// What the period selector shows, and where, is in PeriodSelectorTest.php.
 it('shows a period selector unless it is placed without one', function (PulseWidgetConfiguration $placement, ?bool $hasPeriodSelector) {
     mountPlacement($placement)->assertSet('hasPeriodSelector', $hasPeriodSelector);
 })->with([

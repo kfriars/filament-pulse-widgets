@@ -14,4 +14,28 @@ enum PulsePeriod: string
     case SixHours = '6_hours';
     case TwentyFourHours = '24_hours';
     case SevenDays = '7_days';
+
+    /**
+     * The period as the period selector's menu offers it: "1 hour".
+     */
+    public function getLabel(): string
+    {
+        return __("filament-pulse-widgets::period-selector.option.{$this->value}");
+    }
+
+    /**
+     * The period in full, as the period selector's tooltip gives it: "past hour".
+     */
+    public function getLongLabel(): string
+    {
+        return __("filament-pulse-widgets::period-selector.long.{$this->value}");
+    }
+
+    /**
+     * The period at its shortest, as the period selector's button shows it: "1h".
+     */
+    public function getShortLabel(): string
+    {
+        return __("filament-pulse-widgets::period-selector.short.{$this->value}");
+    }
 }
