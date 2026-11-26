@@ -5,6 +5,7 @@
 /.claude            export-ignore
 /.github            export-ignore
 /docs               export-ignore
+/resources/css      export-ignore
 /tests              export-ignore
 /workbench          export-ignore
 

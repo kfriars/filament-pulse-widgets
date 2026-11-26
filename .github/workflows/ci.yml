@@ -85,6 +85,54 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: composer analyse
 
+  # The Pulse widget stylesheet is compiled from Pulse's views and committed, so it goes
+  # stale when Pulse changes them. Highest dependencies build against the latest Pulse,
+  # lowest against the floor in composer.json, and both must match the committed file.
+  stylesheet:
+    name: Stylesheet (PHP ${{ matrix.php }}, Laravel 13, ${{ matrix.dependencies }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '8.5'
+            dependencies: highest
+          - php: '8.3'
+            dependencies: lowest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, fileinfo, intl, mbstring, pdo_sqlite, sockets, sqlite3, zip
+          coverage: none
+
+      - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: '--with=laravel/framework:^13.0'
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Build the stylesheet
+        run: |
+          npm ci
+          npm run build
+
+      - name: Check the committed stylesheet is up to date
+        run: |
+          if ! git diff --exit-code resources/dist; then
+            pulse="$(composer show laravel/pulse --format=json | jq -r '.versions[0]')"
+            echo "::error file=resources/dist/filament-pulse-widgets.css::The committed stylesheet doesn't match a build against laravel/pulse ${pulse} (${{ matrix.dependencies }} dependencies). Run npm run build and commit resources/dist. If a newer laravel/pulse is what changed it, raise the laravel/pulse floor in composer.json to that version in the same pull request."
+            exit 1
+          fi
+
   browser:
     name: Browser tests (PHP 8.5, Laravel 13)
     runs-on: ubuntu-latest

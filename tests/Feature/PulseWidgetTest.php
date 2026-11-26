@@ -29,6 +29,15 @@ it('nests its Pulse card, already loaded, for the past hour', function () {
         ->and($pulseCard['properties'])->toMatchArray(['period' => '1_hour']);
 });
 
+// The Pulse widget stylesheet styles only what's inside `.fi-pulse-widget`.
+it('wraps its Pulse card in the element the Pulse widget stylesheet is scoped to', function () {
+    $pulseWidget = Livewire::test(PulseUsageWidget::class);
+
+    $pulseCard = nestedPulseCard($pulseWidget);
+
+    expect(elementsMatching($pulseWidget, ".fi-pulse-widget [wire\\:id=\"{$pulseCard['id']}\"]"))->toHaveCount(1);
+});
+
 it('starts its Pulse card at the period it is placed with', function () {
     $pulseWidget = mountPlacement(PulseUsageWidget::make()->period(PulsePeriod::SixHours));
 
