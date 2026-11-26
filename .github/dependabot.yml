@@ -1,0 +1,26 @@
+version: 2
+
+updates:
+  # Keeps the SHA-pinned actions in .github/workflows current.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns: ["*"]
+
+  # A library has no composer.lock, so this only widens composer.json
+  # constraints when a dependency ships a version they don't allow yet.
+  - package-ecosystem: composer
+    directory: /
+    schedule:
+      interval: weekly
+    versioning-strategy: widen
+    cooldown:
+      default-days: 7
+    groups:
+      composer:
+        patterns: ["*"]
