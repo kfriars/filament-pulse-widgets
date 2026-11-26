@@ -4,6 +4,11 @@ on:
   push:
     branches: [master]
   pull_request:
+  # Weekly on highest dependencies, so a Filament, Livewire or Pulse release
+  # that breaks the package shows up within a week.
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,12 +17,48 @@ concurrency:
 permissions:
   contents: read
 
+# Actions are pinned to full commit SHAs; Dependabot keeps the SHAs and version comments current.
+# Every job picks its Laravel version with Composer's --with, leaving composer.json untouched.
 jobs:
-  # Actions are pinned to full commit SHAs; Dependabot keeps the SHAs and version comments current.
+  tests:
+    name: Tests (PHP ${{ matrix.php }}, Laravel ${{ matrix.laravel }}, ${{ matrix.dependencies }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.3', '8.4', '8.5']
+        laravel: ['12', '13']
+        dependencies: [highest]
+        # The lowest jobs prove the floors in composer.json. When one fails,
+        # raise the floor rather than working around the older version.
+        include:
+          - php: '8.3'
+            laravel: '12'
+            dependencies: lowest
+          - php: '8.3'
+            laravel: '13'
+            dependencies: lowest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, fileinfo, intl, mbstring, pdo_sqlite, sockets, sqlite3, zip
+          coverage: none
+
+      - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: '--with=laravel/framework:^${{ matrix.laravel }}.0'
+
+      - name: Tests (Pest)
+        run: composer test
+
   checks:
-    # The one combination the dev setup pins today. Which PHP, Laravel, Filament
-    # and Pulse versions to cover is decided in #11.
-    name: PHP 8.4, Laravel 13
+    name: Checks (PHP 8.5, Laravel 13)
     runs-on: ubuntu-latest
 
     steps:
@@ -25,14 +66,15 @@ jobs:
 
       - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
-          php-version: '8.4'
-          extensions: dom, fileinfo, intl, mbstring, pdo_sqlite, sqlite3, zip
+          php-version: '8.5'
+          extensions: dom, fileinfo, intl, mbstring, pdo_sqlite, sockets, sqlite3, zip
           coverage: none
 
       - id: install
         uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
         with:
           dependency-versions: highest
+          composer-options: '--with=laravel/framework:^13.0'
 
       # Run every check even when an earlier one fails, so one push reports them all.
       - name: Formatting (Pint)
@@ -43,6 +85,38 @@ jobs:
         if: ${{ !cancelled() && steps.install.outcome == 'success' }}
         run: composer analyse
 
-      - name: Tests (Pest)
-        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
-        run: composer test
+  browser:
+    name: Browser tests (PHP 8.5, Laravel 13)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.5'
+          extensions: dom, fileinfo, intl, mbstring, pdo_sqlite, sockets, sqlite3, zip
+          coverage: none
+
+      - uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
+        with:
+          dependency-versions: highest
+          composer-options: '--with=laravel/framework:^13.0'
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      # Publishes Filament's assets into Testbench's skeleton. Without them the
+      # panel throws JavaScript errors and the browser tests fail.
+      - name: Build the workbench
+        run: composer build
+
+      - name: Browser tests (Pest)
+        run: composer test:browser

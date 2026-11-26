@@ -24,3 +24,14 @@ updates:
     groups:
       composer:
         patterns: ["*"]
+
+  # Keeps Playwright, which the browser tests drive, current.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      npm:
+        patterns: ["*"]
