@@ -1,6 +1,6 @@
 /*
  * PROTOTYPE (throwaway): what "look native to the panel" adds on top of the panel's
- * greys and font. Used by variants "theme" and "native", left out of "pulse".
+ * greys and font. The decided "native" look.
  *
  * Filament's sections are `ring-1 ring-gray-950/5 dark:ring-white/10`. A Pulse card is
  * `ring-1 ring-gray-900/5` with no dark ring, so it loses its edge in dark mode.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Prototype\PulseWidgetStyling;
+namespace Workbench\App\Prototype\PulseWidgetPeriodSelector;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\View;
@@ -24,7 +24,7 @@ class ActivityCard extends Card
             fn () => $this->aggregateTotal(['user_request', 'user_job', 'exception', 'cache_hit', 'cache_miss'], 'count'),
         );
 
-        return View::make('prototype-styling::activity-card', [
+        return View::make('prototype-period-selector::activity-card', [
             'totals' => $totals,
             'time' => $time,
             'runAt' => $runAt,

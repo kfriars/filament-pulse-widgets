@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Workbench\App\Prototype\PulseWidgetStyling\Widgets;
+namespace Workbench\App\Prototype\PulseWidgetPeriodSelector\Widgets;
 
-use Workbench\App\Prototype\PulseWidgetStyling\PulseWidget;
+use Workbench\App\Prototype\PulseWidgetPeriodSelector\PulseWidget;
 
 /**
  * PROTOTYPE (throwaway).

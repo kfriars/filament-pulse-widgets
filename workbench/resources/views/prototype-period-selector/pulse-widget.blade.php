@@ -1,9 +1,9 @@
 {{--
     PROTOTYPE (throwaway): Filament owns the grid cell, the unchanged Pulse card renders inside it.
-    `.fi-pulse-widget` is what every variant's stylesheet is scoped to.
+    The period is in the card's key, so a new period mounts a fresh card with the new `period` prop.
 --}}
 <x-filament-widgets::widget class="fi-pulse-widget">
     {!! $cardCss !!}
 
-    @livewire($card, ['lazy' => false], key($this->getId().'-card'))
+    @livewire($card, ['period' => $period, 'lazy' => false], key($this->getId().'-card-'.$period))
 </x-filament-widgets::widget>

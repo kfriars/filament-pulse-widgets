@@ -28,6 +28,9 @@
 
 @source '../../../../../vendor/laravel/pulse/resources/views/**/*';
 
+/* PROTOTYPE: the period selector's markup, which the swapped card header adds inside Pulse widgets. */
+@source '../../../views/prototype-period-selector/{pulse,selector}/**/*';
+
 @import './compat.css';
 @import './native.css';
 

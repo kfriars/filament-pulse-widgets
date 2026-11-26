@@ -7,7 +7,7 @@
 @import "tailwindcss/theme.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
-@source "./../../views/prototype-styling/activity-card.blade.php";
+@source "./../../views/prototype-period-selector/activity-card.blade.php";
 
 #workbench-activity {
     @import "tailwindcss/utilities.css" source(none);

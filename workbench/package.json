@@ -1,6 +1,6 @@
 {
     "private": true,
-    "description": "PROTOTYPE (throwaway): builds the stylesheets for the Pulse widget styling prototype.",
+    "description": "PROTOTYPE (throwaway): builds the stylesheets for the Pulse widget prototypes.",
     "scripts": {
         "build:prototype-css": "sh resources/css/prototype/build.sh"
     },
