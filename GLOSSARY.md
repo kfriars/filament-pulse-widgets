@@ -13,7 +13,7 @@ A Filament dashboard widget: a component a Filament panel places on a dashboard 
 _Avoid_: Card
 
 **Pulse widget**:
-A widget, provided by this package, that renders one Pulse card.
+A widget that contains one Pulse card, unchanged. The package ships one for each first-party Pulse card, and a developer can make one for a custom Pulse card.
 _Avoid_: Card, Pulse card widget
 
 **Pulse page**:
