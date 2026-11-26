@@ -1,0 +1,52 @@
+/*
+ * The Pulse widget stylesheet: Pulse's views compiled with Tailwind 4, so Pulse
+ * widgets work on Filament's default theme with no custom theme.
+ *
+ * Build it with `npm run build`, which writes resources/dist/filament-pulse-widgets.css.
+ * Never edit that file by hand.
+ *
+ * - No preflight: Filament's theme already has Tailwind 4's.
+ * - No theme variables: `theme(reference inline)` writes values straight into the
+ *   utilities, so nothing here redefines a `--color-*` or `--spacing` on :root.
+ * - Greys are the panel's own `--gray-*` palette, so they follow `->colors(['gray' => …])`.
+ * - Every utility is nested under `.fi-pulse-widget`, the Pulse widget's wrapper,
+ *   so none of it can reach the rest of the panel.
+ */
+
+/* Filament puts a panel's assets on the page before its theme, so this stylesheet is
+ * the first to name the cascade layers, and the order they're first named in is the
+ * order they apply in. Naming them in the order Filament's theme does keeps the theme's
+ * base layer beneath its components and utilities. Otherwise this stylesheet's
+ * `components` and `utilities` would come first, and the theme's `base` (its reset)
+ * would override Filament's own padding and margins. */
+@layer properties, theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' theme(reference inline);
+
+@theme inline reference {
+    --color-gray-50: var(--gray-50);
+    --color-gray-100: var(--gray-100);
+    --color-gray-200: var(--gray-200);
+    --color-gray-300: var(--gray-300);
+    --color-gray-400: var(--gray-400);
+    --color-gray-500: var(--gray-500);
+    --color-gray-600: var(--gray-600);
+    --color-gray-700: var(--gray-700);
+    --color-gray-800: var(--gray-800);
+    --color-gray-900: var(--gray-900);
+    --color-gray-950: var(--gray-950);
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@source '../../vendor/laravel/pulse/resources/views';
+@source '../views';
+
+@import './compat.css';
+@import './native.css';
+
+@layer utilities {
+    .fi-pulse-widget {
+        @import 'tailwindcss/utilities.css' source(none);
+    }
+}

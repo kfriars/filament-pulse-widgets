@@ -43,6 +43,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
+            // A second page, with Filament's own inputs, for the browser tests to navigate to and from.
+            ->profile()
+            // The browser tests check that Pulse's JavaScript survives SPA navigation.
+            ->spa()
             ->colors([
                 'primary' => Color::Amber,
             ])

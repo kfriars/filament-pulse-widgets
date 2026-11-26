@@ -1,0 +1,59 @@
+/*
+ * What Pulse's views need to work under Tailwind 4. They're written for Pulse's
+ * own Tailwind 3 build.
+ *
+ * Every hand-written rule is scoped to `.fi-pulse-widget`, the Pulse widget's
+ * wrapper, so nothing here can touch the rest of the panel. The canary tests in
+ * tests/Feature/PulseMarkupCanaryTest.php fail when Pulse changes the markup
+ * these rules select.
+ */
+
+/* The variants from Pulse's tailwind.config.js. `default:` is a zero-specificity base
+ * that only Pulse's own dashboard grid uses. Inside a Pulse widget it only has to exist,
+ * so that `default:text-left` on table headers keeps working. */
+@custom-variant default (:where(&));
+@custom-variant scrollbar (&::-webkit-scrollbar);
+@custom-variant scrollbar-track (&::-webkit-scrollbar-track);
+@custom-variant scrollbar-thumb (&::-webkit-scrollbar-thumb);
+
+@layer components {
+    /* The Servers card. Tailwind 4 keeps the commas in grid-cols-[a,b,…], which is invalid CSS. */
+    .fi-pulse-widget
+        [class~='grid-cols-[max-content,minmax(max-content,1fr),max-content,minmax(min-content,2fr),max-content,minmax(min-content,2fr),minmax(max-content,1fr)]'] {
+        grid-template-columns:
+            max-content minmax(max-content, 1fr) max-content
+            minmax(min-content, 2fr) max-content minmax(min-content, 2fr)
+            minmax(max-content, 1fr);
+    }
+
+    /* The sort and type selects. Pulse relies on @tailwindcss/forms, which Filament v5 doesn't use. */
+    .fi-pulse-widget select {
+        appearance: none;
+        print-color-adjust: exact;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+    }
+
+    .fi-pulse-widget select:focus {
+        outline: none;
+    }
+}
+
+/* Pulse's hand-written CSS (resources/css/pulse.css in laravel/pulse): pad a scrolling
+ * card body so its thin scrollbar doesn't sit on top of the content. */
+@keyframes detect-scroll {
+    from,
+    to {
+        --can-scroll: ;
+    }
+}
+
+@supports selector(::-webkit-scrollbar) {
+    .fi-pulse-widget .supports-scrollbars {
+        animation: detect-scroll linear;
+        animation-timeline: scroll(self);
+        padding-right: var(--can-scroll) 0.75rem;
+    }
+}

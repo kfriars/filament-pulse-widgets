@@ -1,6 +1,11 @@
 {
     "private": true,
+    "scripts": {
+        "build": "tailwindcss --input resources/css/filament-pulse-widgets.css --output resources/dist/filament-pulse-widgets.css --optimize"
+    },
     "devDependencies": {
-        "playwright": "1.65.1"
+        "@tailwindcss/cli": "4.3.5",
+        "playwright": "1.65.1",
+        "tailwindcss": "4.3.5"
     }
 }

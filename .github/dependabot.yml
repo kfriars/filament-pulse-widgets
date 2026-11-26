@@ -25,7 +25,9 @@ updates:
       composer:
         patterns: ["*"]
 
-  # Keeps Playwright, which the browser tests drive, current.
+  # Keeps Tailwind, which builds the Pulse widget stylesheet, and Playwright, which
+  # the browser tests drive, current. A Tailwind update needs the stylesheet rebuilt
+  # and committed, so it gets its own pull request and never holds up Playwright's.
   - package-ecosystem: npm
     directory: /
     schedule:
@@ -33,5 +35,7 @@ updates:
     cooldown:
       default-days: 7
     groups:
+      tailwind:
+        patterns: ["tailwindcss", "@tailwindcss/*"]
       npm:
         patterns: ["*"]

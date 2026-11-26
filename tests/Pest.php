@@ -5,6 +5,8 @@ declare(strict_types=1);
 use Filament\Contracts\Plugin;
 use Filament\Facades\Filament;
 use Filament\Panel;
+use Filament\Support\Assets\AssetManager;
+use Filament\Support\Facades\FilamentAsset;
 use Filament\Widgets\WidgetConfiguration;
 use Illuminate\Testing\TestResponse;
 use Kfriars\FilamentPulseWidgets\FilamentPulseWidgetsPlugin;
@@ -12,6 +14,7 @@ use Kfriars\FilamentPulseWidgets\Tests\TestCase;
 use Livewire\Component;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
+use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\HttpFoundation\Response;
 
 use function Pest\Laravel\postJson;
@@ -38,6 +41,21 @@ function usePanel(?Plugin $plugin = new FilamentPulseWidgetsPlugin): Panel
     Filament::setCurrentPanel($panel);
 
     return $panel;
+}
+
+/**
+ * The assets a panel puts on its pages, as Filament registers them when the panel
+ * boots. Only this panel's: in the console, Filament has already registered every
+ * panel's assets, so they're gathered afresh.
+ */
+function assetsRegisteredBy(Panel $panel): AssetManager
+{
+    app()->instance(AssetManager::class, $assets = new AssetManager);
+    FilamentAsset::clearResolvedInstance(AssetManager::class);
+
+    $panel->registerAssets();
+
+    return $assets;
 }
 
 /**
@@ -95,6 +113,26 @@ function renderedComponents(Testable $rendered): array
     }
 
     return $components;
+}
+
+/**
+ * The elements in a rendered component that a CSS selector matches, the way a
+ * stylesheet's rule would select them.
+ *
+ * @param  Testable<Component>  $rendered
+ * @return list<DOMElement>
+ */
+function elementsMatching(Testable $rendered, string $selector): array
+{
+    $document = new DOMDocument;
+    $document->loadHTML((string) $rendered->html(), LIBXML_NOERROR);
+
+    $elements = (new DOMXPath($document))->query((new CssSelectorConverter)->toXPath($selector));
+
+    return array_values(array_filter(
+        iterator_to_array($elements === false ? [] : $elements),
+        fn (mixed $element): bool => $element instanceof DOMElement,
+    ));
 }
 
 /**

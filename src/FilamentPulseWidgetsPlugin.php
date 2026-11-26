@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Kfriars\FilamentPulseWidgets;
 
 use Closure;
+use Composer\InstalledVersions;
 use Filament\Contracts\Plugin;
 use Filament\Facades\Filament;
 use Filament\Panel;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Gate;
 use Kfriars\FilamentPulseWidgets\Widgets\PulseWidget;
@@ -103,9 +106,29 @@ class FilamentPulseWidgetsPlugin implements Plugin
         return self::ID;
     }
 
+    /**
+     * Filament registers a panel's assets when the panel boots, so they load only
+     * on panels with this plugin.
+     *
+     * Pulse cards need Pulse's own JavaScript (Chart.js and `formatDate`), and
+     * `Pulse::js()` would load Livewire a second time. So the installed Pulse's
+     * `dist/pulse.js` is registered under Pulse's package name, which makes its
+     * `?v=` follow Pulse's version.
+     *
+     * It's a module because it throws if it runs twice in one page, and wherever
+     * requests are served from the console, Filament includes a panel's assets
+     * twice. A browser runs a module once however often a page includes it, and
+     * before Livewire starts. It only sets `window.Chart` and `window.formatDate`.
+     */
     public function register(Panel $panel): void
     {
-        //
+        $panel
+            ->assets([
+                Css::make('filament-pulse-widgets', __DIR__.'/../resources/dist/filament-pulse-widgets.css'),
+            ], 'kfriars/filament-pulse-widgets')
+            ->assets([
+                Js::make('pulse', InstalledVersions::getInstallPath('laravel/pulse').'/dist/pulse.js')->module(),
+            ], 'laravel/pulse');
     }
 
     public function boot(Panel $panel): void
