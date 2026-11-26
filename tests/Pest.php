@@ -58,7 +58,7 @@ function nestedPulseCard(Testable $pulseWidget): array
     $document = new DOMDocument;
     $document->loadHTML($pulseWidget->html(), LIBXML_NOERROR);
 
-    $components = new DOMXPath($document)->query('//*[@*[name()="wire:snapshot"]]');
+    $components = (new DOMXPath($document))->query('//*[@*[name()="wire:snapshot"]]');
 
     $nested = [];
 
