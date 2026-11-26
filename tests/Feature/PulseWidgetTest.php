@@ -10,8 +10,16 @@ use Kfriars\FilamentPulseWidgets\Widgets\PulseWidgetConfiguration;
 use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Livewire\Livewire;
 use Workbench\App\Livewire\Pulse\Activity;
+use Workbench\App\Models\User;
 
-beforeEach(fn () => usePanel());
+use function Pest\Laravel\actingAs;
+
+// The workbench lets every signed-in user view Pulse.
+beforeEach(function () {
+    usePanel();
+
+    actingAs(User::factory()->createOne());
+});
 
 it('nests its Pulse card, already loaded, for the past hour', function () {
     $pulseCard = nestedPulseCard(Livewire::test(PulseUsageWidget::class));
@@ -102,15 +110,15 @@ it('keeps every option but the period out of the browser\'s reach', function (st
     'column span' => ['placementColumnSpan', 'full'],
     'expand' => ['expand', true],
     'period selector' => ['hasPeriodSelector', false],
+    'placement abilities' => ['placementAbilities', []],
+    'placement hidden' => ['isPlacementHidden', true],
 ]);
 
 // Filament lazy-loads widgets; a placeholder the Pulse widget's width keeps the layout from jumping when it loads.
 it('holds its place with a placeholder as wide as the placement', function () {
     $placement = PulseUsageWidget::make()->columnSpan('full');
 
-    $placeholder = Livewire::test($placement->widget, [...$placement->widget::getDefaultProperties(), ...$placement->getProperties()]);
-
-    expect($placeholder->html())
+    expect(mountPlacementLazily($placement)->html())
         ->toContain('fi-loading-section')
         ->toContain('--col-span-lg: 1 / -1');
 });

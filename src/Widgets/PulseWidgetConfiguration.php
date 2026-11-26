@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Kfriars\FilamentPulseWidgets\Widgets;
 
+use Closure;
 use Filament\Widgets\WidgetConfiguration;
+use Illuminate\Support\Arr;
 use Kfriars\FilamentPulseWidgets\PulsePeriod;
 
 /**
@@ -14,6 +16,30 @@ use Kfriars\FilamentPulseWidgets\PulsePeriod;
  */
 class PulseWidgetConfiguration extends WidgetConfiguration
 {
+    /**
+     * Unset, the placement is visible.
+     */
+    protected bool|Closure|null $isVisible = null;
+
+    /**
+     * Unset, the placement isn't hidden.
+     */
+    protected bool|Closure|null $isHidden = null;
+
+    /**
+     * Gate abilities the user needs, every one of them, to see this placement. They
+     * narrow what the Pulse widget's class allows, and are checked while the page
+     * renders and again on every request the Pulse card makes.
+     *
+     * @param  string | list<string>  $abilities
+     */
+    public function authorize(string|array $abilities): static
+    {
+        $this->properties['placementAbilities'] = Arr::wrap($abilities);
+
+        return $this;
+    }
+
     /**
      * The Pulse card to contain: a Pulse card class, or the name it's registered under.
      */
@@ -45,6 +71,53 @@ class PulseWidgetConfiguration extends WidgetConfiguration
         $this->properties['placementColumnSpan'] = $columnSpan;
 
         return $this;
+    }
+
+    /**
+     * Hide the placement. It's decided once, while the page renders, so it's
+     * for layout, not security: use `->authorize()` for that.
+     */
+    public function hidden(bool|Closure $condition = true): static
+    {
+        $this->isHidden = $condition;
+
+        return $this;
+    }
+
+    /**
+     * Show the placement only when the condition holds. It's decided once, while
+     * the page renders, so it's for layout, not security: use `->authorize()` for that.
+     */
+    public function visible(bool|Closure $condition = true): static
+    {
+        $this->isVisible = $condition;
+
+        return $this;
+    }
+
+    /**
+     * Filament reads a placement's properties while the page renders, which is
+     * when its visibility and abilities are first checked. A placement that's
+     * hidden, or whose abilities the user lacks, isn't lazy-loaded, so it leaves
+     * no placeholder behind and never loads its Pulse card.
+     *
+     * @return array<string, mixed>
+     */
+    public function getProperties(): array
+    {
+        $properties = parent::getProperties();
+
+        /** @var class-string<PulseWidget> $pulseWidget */
+        $pulseWidget = $this->widget;
+
+        /** @var list<string> $placementAbilities */
+        $placementAbilities = $properties['placementAbilities'] ?? [];
+
+        if (value($this->isHidden) === true || value($this->isVisible) === false || ! $pulseWidget::canViewPlacement($placementAbilities)) {
+            return [...$properties, 'isPlacementHidden' => true, 'lazy' => false];
+        }
+
+        return $properties;
     }
 
     /**
