@@ -6,6 +6,7 @@ env:
 
 providers:
   - Kfriars\FilamentPulseWidgets\FilamentPulseWidgetsServiceProvider
+  - Workbench\App\Providers\BoostServiceProvider
   - Workbench\App\Providers\WorkbenchServiceProvider
   - Workbench\App\Providers\Filament\AdminPanelProvider
 

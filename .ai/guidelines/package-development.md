@@ -1,0 +1,10 @@
+# Package Development
+
+This repository is a Laravel package (`kfriars/filament-pulse-widgets`), not a Laravel application. Where the generic Laravel guidance below assumes an application, this section wins.
+
+- Package code lives in `src/` (namespace `Kfriars\FilamentPulseWidgets`). Tests live in `tests/`. `workbench/` is a development-only Laravel app (Orchestra Testbench) with a Filament v5 panel, Laravel Pulse and seeded Pulse data; it never ships to users.
+- `php artisan` is a shim for `vendor/bin/testbench`, so Artisan commands run against the workbench app.
+- Do not use `php artisan make:*`. Generators either write into `workbench/` or, for tests, fail. Create files in `src/` and `tests/` by hand, following sibling files.
+- There is no frontend build: no Vite, no `npm run build`.
+- Run `composer test` (Pest), `composer analyse` (Larastan) and `composer format` (Pint) before finishing a change. Every PHP file declares `strict_types=1`.
+- Use the domain terms in `GLOSSARY.md`: Pulse card, widget, Pulse widget, Pulse page, Pulse dashboard.

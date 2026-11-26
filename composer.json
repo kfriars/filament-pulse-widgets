@@ -1,7 +1,13 @@
 {
     "name": "kfriars/filament-pulse-widgets",
     "description": "Laravel Pulse cards as Filament v5 widgets, alongside your panel's own widgets.",
-    "keywords": ["laravel", "filament", "pulse", "widgets", "monitoring"],
+    "keywords": [
+        "laravel",
+        "filament",
+        "pulse",
+        "widgets",
+        "monitoring"
+    ],
     "homepage": "https://github.com/kfriars/filament-pulse-widgets",
     "license": "MIT",
     "authors": [
@@ -15,11 +21,16 @@
         "filament/filament": "^5.12",
         "illuminate/contracts": "^12.0|^13.0",
         "laravel/pulse": "^1.11",
+        "livewire/livewire": "^4.0",
         "spatie/laravel-package-tools": "^1.92"
     },
     "require-dev": {
-        "orchestra/testbench": "^10.12|^11.3",
-        "pestphp/pest": "^3.8|^4.0|^5.0"
+        "larastan/larastan": "^3.15",
+        "laravel/boost": "^2.10",
+        "laravel/pint": "^1.32",
+        "orchestra/testbench": "^11.3",
+        "pestphp/pest": "^5.0",
+        "pestphp/pest-plugin-laravel": "^5.0"
     },
     "autoload": {
         "psr-4": {
@@ -39,6 +50,9 @@
             "@clear",
             "@prepare"
         ],
+        "post-update-cmd": [
+            "@php artisan boost:update --ansi"
+        ],
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": "@php vendor/bin/testbench workbench:build --ansi",
@@ -47,7 +61,9 @@
             "@build",
             "@php vendor/bin/testbench serve --ansi"
         ],
-        "test": "@php vendor/bin/pest"
+        "test": "@php vendor/bin/pest",
+        "analyse": "@php vendor/bin/phpstan analyse --memory-limit=1G",
+        "format": "@php vendor/bin/pint"
     },
     "config": {
         "sort-packages": true,

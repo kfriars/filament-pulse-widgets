@@ -17,7 +17,6 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
-        <env name="APP_KEY" value="base64:7zdQEFzgaRH3l7Qd3r4hPGgsoWN5RcjfIZN5azR6b9c="/>
         <env name="DB_CONNECTION" value="testing"/>
     </php>
 </phpunit>
