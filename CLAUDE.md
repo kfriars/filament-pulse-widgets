@@ -39,6 +39,30 @@ This repository is a Laravel package (`kfriars/filament-pulse-widgets`), not a L
   - Give every Dependabot update entry a `cooldown` of at least 3 days.
 - Use the domain terms in `GLOSSARY.md`: Pulse card, widget, Pulse widget, Placement, Period, Pulse dashboard.
 
+## Releasing
+
+- `CHANGELOG.md` follows Keep a Changelog 1.1.0. A PR that changes something a user could notice (anything in the release archive, or the versions `composer.json` allows) adds one line under `## [Unreleased]`, in the matching Keep a Changelog section, saying in `GLOSSARY.md`'s terms what changed for the developer.
+  - A Dependabot PR that widens a constraint gets its line in a commit added before merging.
+  - Actions, Playwright and dev-only bumps get no line.
+  - A Tailwind bump or a Pulse-driven rebuild that changes the stylesheet gets a "Fixed" line.
+- A fix, an upstream-compatibility change (a rebuilt stylesheet, a widened constraint) or a security fix is released within 7 days of merging. Features may wait and go out together. An empty `[Unreleased]` means no release.
+- The maintainer cuts each release by hand, from `master`:
+  1. A release PR renames `[Unreleased]` to `[1.x.y] - YYYY-MM-DD`, opens a fresh empty `## [Unreleased]` above it, and adds its compare link.
+  2. Merge it.
+  3. `git tag -a v1.x.y -m v1.x.y` on the merge commit, then `git push origin v1.x.y`.
+  4. `gh release create v1.x.y --title v1.x.y --notes-file <that entry>`.
+- A published tag is permanent, because Packagist and Plumb keep the archive it first built: fix a bad release with a new patch tag, and never move or delete a published tag.
+- Semver covers the public surface:
+  - `FilamentPulseWidgetsPlugin`'s `make()`, `get()`, `authorize()` and `ID`.
+  - The Pulse widgets' `make()` and every fluent option on the configuration it returns, overriding `canView()`, and subclassing `PulseWidget` with `public string $card`.
+  - `PulsePeriod` and its cases.
+  - The translation keys and the `filament-pulse-widgets-translations` publish tag.
+  - The `.fi-pulse-widget` class name, as a styling hook (not the rules under it).
+- Anything `@internal`, every view and the stylesheet's contents may change in any release.
+- A Laravel or PHP version is dropped no earlier than its security end of life, in a minor, under "Removed".
+- A raised floor is versioned like the change it rides with: a patch with a fix, a minor with a feature or a dropped version. A major is only for a break in the public surface.
+- Fixes go only into the next release, from `master`. There are no maintenance branches or backports.
+
 === foundation rules ===
 
 # Laravel Boost Guidelines
