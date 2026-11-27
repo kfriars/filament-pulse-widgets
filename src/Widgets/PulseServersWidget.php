@@ -12,12 +12,20 @@ class PulseServersWidget extends PulseWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    /**
+     * @internal
+     */
     public int|string|null $ignoreAfter = null;
 
+    /**
+     * @internal
+     */
     public ?string $sortBy = null;
 
     /**
      * @var 'asc'|'desc'|null
+     *
+     * @internal
      */
     public ?string $sortDirection = null;
 
@@ -32,6 +40,8 @@ class PulseServersWidget extends PulseWidget
 
     /**
      * The Servers card doesn't scroll, so it has no `expand`.
+     *
+     * @internal
      */
     protected function getCardOptions(): array
     {

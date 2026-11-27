@@ -12,6 +12,9 @@ class PulseSlowQueriesWidget extends PulseWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    /**
+     * @internal
+     */
     public ?bool $withoutHighlighting = null;
 
     /**
@@ -23,6 +26,9 @@ class PulseSlowQueriesWidget extends PulseWidget
         return app(PulseSlowQueriesWidgetConfiguration::class, ['widget' => static::class, 'properties' => $properties]);
     }
 
+    /**
+     * @internal
+     */
     protected function getCardOptions(): array
     {
         return [

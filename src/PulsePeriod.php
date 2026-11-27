@@ -17,6 +17,8 @@ enum PulsePeriod: string
 
     /**
      * The period as the period selector's menu offers it: "1 hour".
+     *
+     * @internal
      */
     public function getLabel(): string
     {
@@ -25,6 +27,8 @@ enum PulsePeriod: string
 
     /**
      * The period in full, as the period selector's tooltip gives it: "past hour".
+     *
+     * @internal
      */
     public function getLongLabel(): string
     {
@@ -33,6 +37,8 @@ enum PulsePeriod: string
 
     /**
      * The period at its shortest, as the period selector's button shows it: "1h".
+     *
+     * @internal
      */
     public function getShortLabel(): string
     {

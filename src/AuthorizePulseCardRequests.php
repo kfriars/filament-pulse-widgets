@@ -16,6 +16,8 @@ use Livewire\Mechanisms\HandleComponents\ComponentContext;
  * The Pulse card's snapshot memo records which placement it's in, and whether
  * the placement shows a period selector; Livewire's checksum keeps the browser
  * from changing it.
+ *
+ * @internal
  */
 final class AuthorizePulseCardRequests extends ComponentHook
 {

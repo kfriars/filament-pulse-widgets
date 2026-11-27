@@ -37,6 +37,8 @@ class PulseWidget extends Widget
      * Props passed straight to the Pulse card.
      *
      * @var array<string, mixed>
+     *
+     * @internal
      */
     public array $cardProperties = [];
 
@@ -44,21 +46,29 @@ class PulseWidget extends Widget
      * The placement's column span, which wins over the class's `$columnSpan`.
      *
      * @var int | string | array<string, int | null> | null
+     *
+     * @internal
      */
     public int|string|array|null $placementColumnSpan = null;
 
     /**
      * Whether the Pulse card expands to fit its content instead of scrolling. Unset leaves it to the Pulse card.
+     *
+     * @internal
      */
     public ?bool $expand = null;
 
     /**
      * The period the Pulse card shows. It isn't locked, because the period selector changes it.
+     *
+     * @internal
      */
     public PulsePeriod $period = PulsePeriod::OneHour;
 
     /**
      * Whether the Pulse widget shows a period selector. Unset shows one.
+     *
+     * @internal
      */
     public ?bool $hasPeriodSelector = null;
 
@@ -66,12 +76,16 @@ class PulseWidget extends Widget
      * Gate abilities the user needs, every one of them, to see this placement.
      *
      * @var list<string>
+     *
+     * @internal
      */
     public array $placementAbilities = [];
 
     /**
      * Whether the placement was hidden while the page rendered. A hidden placement
      * renders nothing. Unset, it wasn't.
+     *
+     * @internal
      */
     public ?bool $isPlacementHidden = null;
 
@@ -102,6 +116,8 @@ class PulseWidget extends Widget
      * that needs the given abilities.
      *
      * @param  list<string>  $placementAbilities
+     *
+     * @internal
      */
     #[Unexposed]
     public static function canViewPlacement(array $placementAbilities): bool
@@ -163,6 +179,8 @@ class PulseWidget extends Widget
      * The Pulse card's own options, under the Pulse card's names for them. Unset options are null.
      *
      * @return array<string, mixed>
+     *
+     * @internal
      */
     protected function getCardOptions(): array
     {
@@ -178,6 +196,8 @@ class PulseWidget extends Widget
      * from its dashboard's layout, so the Pulse widget renders it itself. That
      * way it arrives with the Pulse widget's lazy load, and again with every
      * new period.
+     *
+     * @internal
      */
     protected function getPulseCardCss(): string
     {
@@ -197,6 +217,8 @@ class PulseWidget extends Widget
 
     /**
      * Read a CSS file a Pulse card's `css()` names, failing as clearly as Pulse does.
+     *
+     * @internal
      */
     protected function readPulseCardCssFile(string $path): string
     {
@@ -213,6 +235,8 @@ class PulseWidget extends Widget
      * View data can't share a name with a public property, which would replace it.
      *
      * @return array{pulseCard: string, pulseCardCss: string, pulseCardProperties: array<string, mixed>, pulseCardKey: string}
+     *
+     * @internal
      */
     protected function getViewData(): array
     {

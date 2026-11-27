@@ -10,6 +10,9 @@ use Livewire\ComponentHookRegistry;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
+/**
+ * @internal
+ */
 class FilamentPulseWidgetsServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
