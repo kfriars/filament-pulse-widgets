@@ -28,3 +28,13 @@ it('ships only the package itself in the release archive', function () {
 
     expect($unexpected)->toBe([]);
 });
+
+// composer.json declares MIT, and the licence has to travel with every install.
+it('ships the licence in the release archive', function () {
+    $archive = Process::path(package_path())
+        ->run('git archive --worktree-attributes --format=tar HEAD | tar -t')
+        ->throw()
+        ->output();
+
+    expect(explode("\n", trim($archive)))->toContain('LICENSE.md');
+});
