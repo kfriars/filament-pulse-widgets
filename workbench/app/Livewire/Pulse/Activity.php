@@ -11,7 +11,8 @@ use Livewire\Attributes\Lazy;
 
 /**
  * A custom Pulse card, written the way Pulse's docs tell an app to write one:
- * how many requests, jobs, exceptions and cache lookups the app has seen.
+ * how many requests, jobs, exceptions and cache lookups the app has seen. Its
+ * css() brings the classes the Pulse widget stylesheet doesn't have.
  */
 #[Lazy]
 class Activity extends Card
@@ -36,5 +37,13 @@ class Activity extends Card
             'time' => $time,
             'runAt' => $runAt,
         ]);
+    }
+
+    /**
+     * The card's own stylesheet, compiled from workbench/resources/css/pulse/activity.css.
+     */
+    protected function css(): string
+    {
+        return __DIR__.'/../../../resources/dist/pulse/activity.css';
     }
 }

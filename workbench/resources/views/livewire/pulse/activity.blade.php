@@ -1,4 +1,4 @@
-<x-pulse::card :cols="$cols" :rows="$rows" :class="$class">
+<x-pulse::card id="activity" :cols="$cols" :rows="$rows" :class="$class">
     <x-pulse::card-header
         name="Activity"
         x-bind:title="`Time: {{ number_format($time) }}ms; Run at: ${formatDate('{{ $runAt }}')};`"
