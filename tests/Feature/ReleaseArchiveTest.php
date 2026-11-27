@@ -18,6 +18,8 @@ it('ships only the package itself in the release archive', function () {
         ->reject(fn (string $path): bool => str_ends_with($path, '/'))
         ->reject(fn (string $path): bool => str_starts_with($path, 'src/'))
         ->reject(fn (string $path): bool => str_starts_with($path, 'resources/views/'))
+        // The period selector's labels, which an app can publish and translate.
+        ->reject(fn (string $path): bool => str_starts_with($path, 'resources/lang/'))
         // The compiled Pulse widget stylesheet ships; its source in resources/css/ doesn't.
         ->reject(fn (string $path): bool => str_starts_with($path, 'resources/dist/'))
         ->reject(fn (string $path): bool => in_array($path, ['composer.json', 'LICENSE.md', 'README.md'], true))

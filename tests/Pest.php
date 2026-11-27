@@ -2,18 +2,21 @@
 
 declare(strict_types=1);
 
+use Composer\InstalledVersions;
 use Filament\Contracts\Plugin;
 use Filament\Facades\Filament;
 use Filament\Panel;
 use Filament\Support\Assets\AssetManager;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Widgets\WidgetConfiguration;
+use Illuminate\Support\Facades\View;
 use Illuminate\Testing\TestResponse;
 use Kfriars\FilamentPulseWidgets\FilamentPulseWidgetsPlugin;
 use Kfriars\FilamentPulseWidgets\Tests\TestCase;
 use Livewire\Component;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
+use Pest\TestSuite;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -24,6 +27,20 @@ pest()->extend(TestCase::class)->in('Feature', 'Browser');
 // Pulse cards poll every 5 seconds and Pulse caches their queries for 5 seconds,
 // so new data can take 10 seconds to show.
 pest()->browser()->timeout(15_000);
+
+/**
+ * Boot the app afresh, as its next request would, for packages to find files
+ * the test has published where they look only while booting. The test's panel
+ * and signed-in user go with the old app.
+ */
+function rebootApplication(): void
+{
+    $testCase = TestSuite::getInstance()->test;
+
+    assert($testCase instanceof TestCase);
+
+    $testCase->rebootApplication();
+}
 
 /**
  * Register a panel for the test and make it the current one, the way Filament's
@@ -59,6 +76,16 @@ function assetsRegisteredBy(Panel $panel): AssetManager
 }
 
 /**
+ * Render Pulse's views from the installed Pulse alone, as if nothing else had
+ * added to or changed its `pulse` view namespace.
+ */
+function usePulseViewsOnly(): void
+{
+    View::replaceNamespace('pulse', InstalledVersions::getInstallPath('laravel/pulse').'/resources/views');
+    View::getFinder()->flush();
+}
+
+/**
  * Mount a placement's Pulse widget with the placement's options, as Filament does,
  * but without lazy loading, so the Pulse widget renders its Pulse card straight away.
  *
@@ -80,6 +107,21 @@ function mountPlacementLazily(WidgetConfiguration $placement): Testable
 }
 
 /**
+ * A rendered component, or HTML a Livewire request returned, as a document.
+ * It's read as UTF-8, as a browser reads it: without the declaration,
+ * DOMDocument would read it as ISO-8859-1 and garble every accent.
+ *
+ * @param  Testable<Component> | string  $rendered
+ */
+function htmlDocument(Testable|string $rendered): DOMDocument
+{
+    $document = new DOMDocument;
+    $document->loadHTML('<?xml encoding="UTF-8">'.(is_string($rendered) ? $rendered : (string) $rendered->html()), LIBXML_NOERROR);
+
+    return $document;
+}
+
+/**
  * The Livewire components in a rendered component, outermost first, as the browser receives them.
  *
  * @param  Testable<Component>  $rendered
@@ -87,8 +129,7 @@ function mountPlacementLazily(WidgetConfiguration $placement): Testable
  */
 function renderedComponents(Testable $rendered): array
 {
-    $document = new DOMDocument;
-    $document->loadHTML((string) $rendered->html(), LIBXML_NOERROR);
+    $document = htmlDocument($rendered);
 
     $elements = (new DOMXPath($document))->query('//*[@*[name()="wire:snapshot"]]');
 
@@ -116,16 +157,15 @@ function renderedComponents(Testable $rendered): array
 }
 
 /**
- * The elements in a rendered component that a CSS selector matches, the way a
- * stylesheet's rule would select them.
+ * The elements in a rendered component, or in HTML a Livewire request returned,
+ * that a CSS selector matches, the way a stylesheet's rule would select them.
  *
- * @param  Testable<Component>  $rendered
+ * @param  Testable<Component> | string  $rendered
  * @return list<DOMElement>
  */
-function elementsMatching(Testable $rendered, string $selector): array
+function elementsMatching(Testable|string $rendered, string $selector): array
 {
-    $document = new DOMDocument;
-    $document->loadHTML((string) $rendered->html(), LIBXML_NOERROR);
+    $document = htmlDocument($rendered);
 
     $elements = (new DOMXPath($document))->query((new CssSelectorConverter)->toXPath($selector));
 
@@ -133,6 +173,14 @@ function elementsMatching(Testable $rendered, string $selector): array
         iterator_to_array($elements === false ? [] : $elements),
         fn (mixed $element): bool => $element instanceof DOMElement,
     ));
+}
+
+/**
+ * An element's text as a reader sees it: whitespace collapsed and trimmed.
+ */
+function textOf(DOMElement $element): string
+{
+    return trim((string) preg_replace('/\s+/', ' ', $element->textContent));
 }
 
 /**

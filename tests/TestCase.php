@@ -20,6 +20,15 @@ abstract class TestCase extends Orchestra
      */
     protected $enablesPackageDiscoveries = true;
 
+    /**
+     * Boot the app afresh, as its next request would, for packages to find files
+     * a test has published where they look only while booting.
+     */
+    public function rebootApplication(): void
+    {
+        $this->reloadApplication();
+    }
+
     protected function defineEnvironment($app): void
     {
         // testbench.yaml's env (and its APP_KEY) only applies to the served workbench.

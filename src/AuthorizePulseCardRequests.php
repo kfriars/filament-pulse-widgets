@@ -13,12 +13,13 @@ use Livewire\Mechanisms\HandleComponents\ComponentContext;
  * Checks a placement's access rules (its Pulse widget's class rules and the
  * placement's abilities) on every request its Pulse card makes itself: its
  * polls, sorting and type changes, which never pass through the Pulse widget.
- * The Pulse card's snapshot memo records which placement it's in; Livewire's
- * checksum keeps the browser from changing it.
+ * The Pulse card's snapshot memo records which placement it's in, and whether
+ * the placement shows a period selector; Livewire's checksum keeps the browser
+ * from changing it.
  */
 final class AuthorizePulseCardRequests extends ComponentHook
 {
-    private const MEMO_KEY = 'pulseWidget';
+    public const MEMO_KEY = 'pulseWidget';
 
     public function skip(): bool
     {
@@ -33,7 +34,11 @@ final class AuthorizePulseCardRequests extends ComponentHook
     public function mount(array $params, mixed $parent): void
     {
         if ($parent instanceof PulseWidget) {
-            $this->storeSet(self::MEMO_KEY, ['class' => $parent::class, 'placementAbilities' => $parent->placementAbilities]);
+            $this->storeSet(self::MEMO_KEY, [
+                'class' => $parent::class,
+                'placementAbilities' => $parent->placementAbilities,
+                'hasPeriodSelector' => $parent->hasPeriodSelector !== false,
+            ]);
         }
     }
 
@@ -42,7 +47,7 @@ final class AuthorizePulseCardRequests extends ComponentHook
      */
     public function hydrate(array $memo): void
     {
-        /** @var array{class: class-string<PulseWidget>, placementAbilities: list<string>} | null $pulseWidget */
+        /** @var array{class: class-string<PulseWidget>, placementAbilities: list<string>, hasPeriodSelector: bool} | null $pulseWidget */
         $pulseWidget = $memo[self::MEMO_KEY] ?? null;
 
         if ($pulseWidget === null) {
