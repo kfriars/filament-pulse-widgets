@@ -14,6 +14,7 @@ use Laravel\Pulse\Livewire\Usage;
 use Livewire\Features\SupportTesting\Testable;
 use Livewire\Livewire;
 use Workbench\Database\Seeders\DatabaseSeeder;
+use Workbench\Database\Seeders\ScreenshotSeeder;
 
 use function Pest\Laravel\seed;
 
@@ -46,4 +47,14 @@ it('gives every first-party Pulse card something to show', function () {
     $emptyPulseCards = array_keys(array_filter($isEmpty));
 
     expect($emptyPulseCards)->toBe([]);
+});
+
+// The README's screenshots show the Usage card, so `npm run screenshots` seeds users
+// whose names a reader takes at face value, instead of Faker's and "Workbench Admin".
+it('seeds the README screenshots with plain user names', function () {
+    seed(ScreenshotSeeder::class);
+
+    Livewire::withoutLazyLoading()->test(Usage::class, ['type' => 'requests'])
+        ->assertSee(['Sofia Martinez', 'James Chen', 'Amara Okafor', 'Liam Walsh', 'Hannah Weber'])
+        ->assertDontSee('Workbench Admin');
 });

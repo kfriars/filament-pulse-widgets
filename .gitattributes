@@ -2,6 +2,7 @@
 # tests/Feature/ReleaseArchiveTest.php fails if anything else would ship.
 
 /.ai                export-ignore
+/art                export-ignore
 /.claude            export-ignore
 /.github            export-ignore
 /docs               export-ignore
