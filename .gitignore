@@ -4,5 +4,6 @@
 /composer.lock
 /.phpunit.cache
 /node_modules
+/storage
 /tests/Browser/Screenshots
 /tests/Browser/Traces
