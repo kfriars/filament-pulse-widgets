@@ -13,8 +13,8 @@ Images are relative here so the prototype renders on its branch; the real README
 Laravel Pulse cards as Filament v5 widgets, alongside your panel's own widgets.
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="screenshots/dashboard-dark.png">
-  <img alt="A Filament dashboard with Pulse's Servers, Usage and Queues cards next to Filament's own widgets" src="screenshots/dashboard-light.png">
+  <source media="(prefers-color-scheme: dark)" srcset="screenshots/dashboard-dark-framed.png">
+  <img alt="A Filament dashboard with Pulse's Servers, Usage and Queues cards next to Filament's own widgets" src="screenshots/dashboard-light-framed.png">
 </picture>
 
 Every first-party Pulse card ships as a ready-made **Pulse widget**, and any custom Pulse card can become one. A Pulse widget renders the real Pulse card, unchanged, styled to match your panel (light and dark), with its own period selector. It runs on official [`laravel/pulse`](https://github.com/laravel/pulse), not a fork, and needs no custom Filament theme.
@@ -172,7 +172,10 @@ Users who aren't allowed don't see the Pulse widget at all. If they lose access 
 
 ## The period selector
 
-<img alt="A Pulse widget's period selector open, offering 1 hour, 6 hours, 24 hours and 7 days" src="screenshots/period-selector-light.png" width="420">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="screenshots/period-selector-dark-framed.png">
+  <img alt="A Pulse widget's period selector open, offering 1 hour, 6 hours, 24 hours and 7 days" src="screenshots/period-selector-light-framed.png" width="480">
+</picture>
 
 Each Pulse widget has its own period selector in its Pulse card's header (Servers has none, as it has no header). It starts at the placement's `->period()` and resets on every page load.
 

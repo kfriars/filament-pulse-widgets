@@ -34,3 +34,31 @@ for (const scheme of ['light', 'dark']) {
 }
 
 await browser.close();
+
+// Frame each shot in a macOS window: title bar with traffic lights, rounded corners and a
+// soft shadow on a transparent background, so it sits on GitHub's light and dark pages alike.
+import { readFileSync } from 'node:fs';
+
+const framer = await chromium.launch();
+const framePage = await framer.newPage({ deviceScaleFactor: 1 });
+
+for (const name of ['dashboard-light', 'dashboard-dark', 'period-selector-light', 'period-selector-dark']) {
+  const dark = name.endsWith('dark');
+  const png = readFileSync(`${out}${name}.png`).toString('base64');
+  await framePage.setContent(`
+    <style>
+      body { margin: 0; background: transparent; }
+      .stage { display: inline-block; padding: 80px 100px 120px; }
+      .window { border-radius: 20px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,.35), 0 0 0 1px ${dark ? 'rgba(255,255,255,.14)' : 'rgba(0,0,0,.12)'}; }
+      .bar { height: 56px; display: flex; align-items: center; gap: 16px; padding: 0 24px; background: ${dark ? '#2b2b2e' : '#ececec'}; border-bottom: 1px solid ${dark ? '#000' : '#d4d4d4'}; }
+      .bar i { width: 24px; height: 24px; border-radius: 50%; display: block; }
+      img { display: block; }
+    </style>
+    <div class="stage"><div class="window">
+      <div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+      <img src="data:image/png;base64,${png}">
+    </div></div>`);
+  await framePage.locator('.stage').screenshot({ path: `${out}${name}-framed.png`, omitBackground: true });
+}
+
+await framer.close();
