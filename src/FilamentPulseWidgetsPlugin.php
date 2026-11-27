@@ -30,6 +30,8 @@ class FilamentPulseWidgetsPlugin implements Plugin
      * Who can see Pulse widgets on this panel. Unset leaves it to Pulse's `viewPulse` gate.
      *
      * @var bool | (Closure(?Authenticatable): bool) | null
+     *
+     * @internal
      */
     protected bool|Closure|null $rule = null;
 
@@ -37,6 +39,8 @@ class FilamentPulseWidgetsPlugin implements Plugin
      * Who can see Pulse widgets of each class, in place of the panel-wide rule.
      *
      * @var array<class-string<PulseWidget>, bool | (Closure(?Authenticatable): bool)>
+     *
+     * @internal
      */
     protected array $widgetRules = [];
 
@@ -88,6 +92,8 @@ class FilamentPulseWidgetsPlugin implements Plugin
      * Whether the panel's signed-in user can see a Pulse widget of the given class.
      *
      * @param  class-string<PulseWidget>  $pulseWidget
+     *
+     * @internal
      */
     public function canView(string $pulseWidget): bool
     {

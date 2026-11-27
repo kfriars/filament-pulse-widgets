@@ -12,6 +12,8 @@ class PulseUsageWidget extends PulseWidget
 
     /**
      * @var 'requests'|'slow_requests'|'jobs'|null
+     *
+     * @internal
      */
     public ?string $type = null;
 
@@ -24,6 +26,9 @@ class PulseUsageWidget extends PulseWidget
         return app(PulseUsageWidgetConfiguration::class, ['widget' => static::class, 'properties' => $properties]);
     }
 
+    /**
+     * @internal
+     */
     protected function getCardOptions(): array
     {
         return [

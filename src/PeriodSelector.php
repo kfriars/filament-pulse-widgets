@@ -9,6 +9,8 @@ use Livewire\Mechanisms\DataStore;
 
 /**
  * What Pulse's card header needs to know to show a period selector.
+ *
+ * @internal
  */
 final class PeriodSelector
 {

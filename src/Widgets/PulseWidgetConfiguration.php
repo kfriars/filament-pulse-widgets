@@ -18,11 +18,15 @@ class PulseWidgetConfiguration extends WidgetConfiguration
 {
     /**
      * Unset, the placement is visible.
+     *
+     * @internal
      */
     protected bool|Closure|null $isVisible = null;
 
     /**
      * Unset, the placement isn't hidden.
+     *
+     * @internal
      */
     protected bool|Closure|null $isHidden = null;
 
