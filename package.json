@@ -3,7 +3,8 @@
     "scripts": {
         "build": "npm run build:stylesheet && npm run build:workbench",
         "build:stylesheet": "tailwindcss --input resources/css/filament-pulse-widgets.css --output resources/dist/filament-pulse-widgets.css --optimize",
-        "build:workbench": "tailwindcss --input workbench/resources/css/pulse/activity.css --output workbench/resources/dist/pulse/activity.css --optimize"
+        "build:workbench": "tailwindcss --input workbench/resources/css/pulse/activity.css --output workbench/resources/dist/pulse/activity.css --optimize",
+        "screenshots": "node art/screenshots.mjs"
     },
     "devDependencies": {
         "@tailwindcss/cli": "4.3.5",
