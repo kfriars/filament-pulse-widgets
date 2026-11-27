@@ -26,6 +26,7 @@ This repository is a Laravel package (`kfriars/filament-pulse-widgets`), not a L
 - Do not use `php artisan make:*`. Generators either write into `workbench/` or, for tests, fail. Create files in `src/` and `tests/` by hand, following sibling files.
 - npm is here for Playwright, which the browser tests drive, and for the Pulse widget stylesheet. There is no Vite.
   - `npm run build` compiles `resources/css/` into `resources/dist/filament-pulse-widgets.css` with the Tailwind CLI. Run it after changing any package view or anything in `resources/css/`, and commit the output with the change. Never edit `resources/dist/` by hand.
+  - `npm run build` also compiles the workbench's custom Activity card stylesheet, which its `css()` returns, from `workbench/resources/css/pulse/` into `workbench/resources/dist/pulse/`. Run it after changing that card's view, and commit that output too.
   - CI fails when the committed stylesheet is out of date. When a newer Pulse is what changed it, the same PR raises the `laravel/pulse` floor in `composer.json`.
   - After rebuilding, `composer build` republishes the stylesheet for the workbench.
   - `composer serve` and `composer test` never need Node.

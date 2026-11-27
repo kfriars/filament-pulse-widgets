@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Kfriars\FilamentPulseWidgets\Widgets;
 
+use Closure;
 use Filament\Facades\Filament;
 use Filament\Support\Components\Attributes\Unexposed;
 use Filament\Widgets\Widget;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Kfriars\FilamentPulseWidgets\FilamentPulseWidgetsPlugin;
 use Kfriars\FilamentPulseWidgets\PulsePeriod;
@@ -15,6 +18,7 @@ use Laravel\Pulse\Livewire\Card;
 use Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException;
 use Livewire\Livewire;
 use LogicException;
+use RuntimeException;
 
 /**
  * A widget that contains one Pulse card, unchanged.
@@ -168,14 +172,53 @@ class PulseWidget extends Widget
     }
 
     /**
+     * The Pulse card's own `css()`, rendered the way Pulse renders it on its
+     * dashboard: a file is inlined in a `<style>` tag, an `Htmlable` is output as
+     * it is. Pulse collects it only on full-page requests and outputs it only
+     * from its dashboard's layout, so the Pulse widget renders it itself. That
+     * way it arrives with the Pulse widget's lazy load, and again with every
+     * new period.
+     */
+    protected function getPulseCardCss(): string
+    {
+        /** @var Card $pulseCard mount() has checked that it is one. */
+        $pulseCard = Livewire::new($this->card);
+
+        // Pulse calls css() from its Card and nowhere else, so it's protected.
+        /** @var list<string | Htmlable> $css */
+        $css = Arr::wrap(Closure::bind(fn (): mixed => $this->css(), $pulseCard, $pulseCard)());
+
+        return collect($css)
+            ->map(fn (string|Htmlable $css): string => $css instanceof Htmlable
+                ? $css->toHtml()
+                : '<style>'.$this->readPulseCardCssFile($css).'</style>')
+            ->implode('');
+    }
+
+    /**
+     * Read a CSS file a Pulse card's `css()` names, failing as clearly as Pulse does.
+     */
+    protected function readPulseCardCssFile(string $path): string
+    {
+        $contents = @file_get_contents($path);
+
+        if ($contents === false) {
+            throw new RuntimeException("Pulse card [{$this->card}] names the CSS file [{$path}] in its css(), and it can't be read.");
+        }
+
+        return $contents;
+    }
+
+    /**
      * View data can't share a name with a public property, which would replace it.
      *
-     * @return array{pulseCard: string, pulseCardProperties: array<string, mixed>, pulseCardKey: string}
+     * @return array{pulseCard: string, pulseCardCss: string, pulseCardProperties: array<string, mixed>, pulseCardKey: string}
      */
     protected function getViewData(): array
     {
         return [
             'pulseCard' => $this->card,
+            'pulseCardCss' => $this->getPulseCardCss(),
             'pulseCardProperties' => [
                 ...$this->cardProperties,
                 ...array_filter($this->getCardOptions(), fn (mixed $option): bool => $option !== null),
